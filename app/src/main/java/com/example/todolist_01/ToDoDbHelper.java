@@ -7,14 +7,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 public class ToDoDbHelper extends SQLiteOpenHelper {
-
+    // SQLite
     private static final String DB_NAME = "todolist.db";
     private static final int DB_VERSION = 1;
 
+    // 생성자
     public ToDoDbHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
+    // table 만들기
     @Override
     public void onCreate(SQLiteDatabase db) {
 
@@ -28,6 +30,7 @@ public class ToDoDbHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TODOLIST_TABLE);
     }
 
+    // 스키마변경
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 

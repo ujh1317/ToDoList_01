@@ -14,10 +14,12 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder
 
     private Context mContext;
     private Cursor cursor;
+    private ListItemClickListener listItemClickListener;
 
-    public ToDoAdapter(Context context, Cursor cursor) {
-        this.mContext = context;
+    public ToDoAdapter(Context mContext, Cursor cursor, ListItemClickListener listItemClickListener) {
+        this.mContext = mContext;
         this.cursor = cursor;
+        this.listItemClickListener = listItemClickListener;
     }
 
     @NonNull
@@ -31,12 +33,16 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder
     @Override
     public void onBindViewHolder(@NonNull ToDoViewHolder toDoViewHolder, int i) {
 
-        if (cursor.moveToPosition(i)){
+        if (!cursor.moveToPosition(i)) {
             return;
         }
         String task = cursor.getString(cursor.getColumnIndex(ToDoContract.ToDoListEntry.COLUMN_TASK));
         int priority = cursor.getInt(cursor.getColumnIndex(ToDoContract.ToDoListEntry.COLUMN_PRIORITY));
         String timestamp = cursor.getString(cursor.getColumnIndex(ToDoContract.ToDoListEntry.COLUMN_TIMESTAMP));
+
+        long id = cursor.getLong(cursor.getColumnIndex(ToDoContract.ToDoListEntry._ID));
+
+        toDoViewHolder.itemView.setTag(id);
 
         toDoViewHolder.task_text.setText(task);
         toDoViewHolder.priority_text.setText(String.valueOf(priority));
@@ -49,7 +55,7 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder
         return cursor.getCount();
     }
 
-    public class ToDoViewHolder extends RecyclerView.ViewHolder {
+    public class ToDoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView task_text, priority_text, timestamp_text;
 
@@ -59,15 +65,22 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder
             task_text = itemView.findViewById(R.id.task_text);
             priority_text = itemView.findViewById(R.id.priority_text);
             timestamp_text = itemView.findViewById(R.id.timestamp_text);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            listItemClickListener.onClick(v, getAdapterPosition());
         }
     }
-    public void swapCursor(Cursor newCursor){
 
-        if (cursor != null){
+    public void swapCursor(Cursor newCursor) {
+
+        if (cursor != null) {
             cursor.close();
         }
         cursor = newCursor;
-        if (newCursor != null){
+        if (newCursor != null) {
             this.notifyDataSetChanged();
         }
     }

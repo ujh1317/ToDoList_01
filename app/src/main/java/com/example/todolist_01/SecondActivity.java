@@ -24,6 +24,7 @@ public class SecondActivity extends AppCompatActivity {
     private Integer[] priority = {0, 1, 2};
 
     SQLiteDatabase mDb;
+    private long id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,7 @@ public class SecondActivity extends AppCompatActivity {
         setContentView(R.layout.activity_second);
 
         // actionbar 이름 변경
-        ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Add");
 
         // actionbar 에 back button 추가
